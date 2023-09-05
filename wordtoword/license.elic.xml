@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<License xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Key="2aQdCzfNH4hMNgEAu9f0VrvSgto0TyuI72c7+jSAmK/WwO0IF/6ymWumB+DjMI6s/inaESLkHTF86eXSxKWvADB8tj/BBFLyAHvNiGDplRAsWbSPb3k7PI//SnXsJi2KZHW/3qTBjTd3RDKRBoJOivTj26I+QKWUJFRiRg7lTnd9zLzbgoXwv7sP1CxXqyOi97mPAERArllfb2eCj4O+UvIUOxFMD5uDxPAO/KuI1nVvzUOhuTEfV5MBc82N7WU4PdsD1zCxj/0cQEdnYlS/LPaIR/SiLMBNohUhVdDjdBda3L2tbH+dbVEj0R/7gfbCBRHDsnUNxxAgfIHPRZzERShTC8bP+Ha11H7CKCZ/fghHsB1O3asECLje6WiSt5hMkLOJtIht3uK9G0EiQJhKE6mu6HjgP9Kni5pEQwGLo0wXMmrAvObRX/OSryOwja5OQ5mLEhEV5SatASCiRa9gtUULLWYWErRwvMVpi7qwZf6L2Nry7F5Gsve5025KUv0mZMYlzu/EIyNx+FccvZP8qxnHxy5KlNS3244KqrM82zHVW025XfC+D7e9/u6GG6ynPEcg05UgxqjGS6nO1MzG2xxLNPnhc4fZWOO/zLPpO3kOXnlA76x1WjI+fPiwwn6Zi8ASjpQhn4ZJO2C9GWfuqiGw7XSdtuxhGmL3nyW2V8V4UmJVEFollx3evwDYDjItz/3NyIAh8Q6bNjjzFggsBDFhhSEtnKawcAhWVykXFxx4saC8ZprF6rrodpUygPa+EjGNemkfAPRUqLKXcs93bbDM9W17ziqK1stD7si39x6IselFjbtrtu6ONF5Q7LUDa5k1zrSjfW4+XplSrtaWWcFZkmtCIugpXUrvmCd7MiPx+HeLgpzOYCl34eUv5MAxcK75zCpF57NMxOwdQ2Zz4AeT1fSIHfof/EbypVZnxfNDyf+k2l5R0nbb14KHDnxfqf/xB4RDOohXbj9gZrwE0VwLzGmG+UZOVOPTNw6NAniMvkvoccbWKjjcm8SG7JR48+KvAkNirWPN61a+e+ZwXugXfSaQTvyJOgn1aw8m0oIirvMBTw37yV5ODpCRoeEReRfklz2SoNF/i9NUshPouwyiNHUhA2pFHNQtCyndeExpESCed+FgR5L4Y3xoAWPY7MMIDF19edukbBa7Poe73MV6/tRULPH26GUBqEeq36FTL2D5avxd90qSbBiUBZyhmSmKy3nQfM1O8y7v4sxitVMGAJEpwxsIx3xSyYfcsFU5fIQYhhubiTgUAVfQI3nPGnQqsrFEHb7J6d8d7U2ssSH0GSm+MUPISDXpTt3fU6aOREX3nTk0QiEjATH9Bypo8w8w4hyhjMkZvsIuIsL/DRtP0S+dTqiNVYt+Ey0sVaGS7DVIVBWY/9Rn3hdDTwxBAgHllV8dC4okoqMokxlM4F9E9HaW7li3eOFaPY1kEQzz4uBWNIRE6Q==" Version="1.3">
+	<Type>Runtime</Type>
+	<Username>Mike Jin</Username>
+	<Email>mike.jin@sgs.com</Email>
+	<Organization>SGS</Organization>
+	<LicensedDate>2016-08-25T00:00:00Z</LicensedDate>
+	<ExpiredDate>2017-08-25T00:00:00Z</ExpiredDate>
+	<Products>
+		<Product>
+			<Name>Spire.Office for .NET</Name>
+			<Version>2.14</Version>
+			<Subscription>
+				<NumberOfPermittedDeveloper>1</NumberOfPermittedDeveloper>
+				<NumberOfPermittedSite>1</NumberOfPermittedSite>
+			</Subscription>
+		</Product>
+	</Products>
+	<Issuer>
+		<Name>e-iceblue</Name>
+		<Email>sales@e-iceblue.com</Email>
+		<Url>http://www.e-iceblue.com</Url>
+	</Issuer>
+</License>
