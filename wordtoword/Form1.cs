@@ -328,9 +328,6 @@ namespace wordtoword
                 }
 
 
-
-
-
             }
 
         }
@@ -822,6 +819,87 @@ namespace wordtoword
             //result page P2부터 시작.
             foreach (Section sec in document.Sections)
             {
+
+                //4.3.5.1
+                if (HasParagraph(sec, "4.3.5.1", true) == true)
+                {
+                    //lead유무
+                    if (HasParagraph(sec, "Total Lead", false) == true)
+                    {
+
+
+
+                    }
+                    else
+                    {
+
+                    }
+
+
+
+                }
+                else
+                {
+
+
+                }
+
+                //4.3.5.2
+                if (HasParagraph(sec, "4.3.5.2", true) == true)
+                {
+                    //lead유무
+                    if (HasParagraph(sec, "Total Lead", false) == true)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+
+                }
+                else
+                {
+
+
+                }
+                //justify
+                //Report Comments
+
+                foreach (Table table in sec.Tables)
+                {
+                    foreach (TableRow tbr in table.Rows)
+                    {
+                        foreach (TableCell tbrc in tbr.Cells)
+                        {
+                            foreach (Paragraph pr in tbrc.Paragraphs)
+                            {
+                                if (pr.Text.Trim() == "Report Comments")
+                                {
+
+                                    int cellIndx = tbrc.GetCellIndex();
+                                    TableCell tbc_ = tbr.Cells[cellIndx + 2];
+                                    foreach (Paragraph prr in tbc_.Paragraphs)
+                                    {
+                                        prr.Format.HorizontalAlignment = HorizontalAlignment.Justify;
+
+                                    }
+
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+                }
+
+
+
+
+
+
                 //MASS OF TRACE AMOUNT(MG)찾기
                 foreach (Table table in sec.Tables)
                 {
@@ -831,7 +909,7 @@ namespace wordtoword
                         {
                             foreach (Paragraph pr in tbrc.Paragraphs)
                             {
-                                if (pr.Text.Trim() == "Mass of trace amount(mg)")
+                                if (pr.Text.Trim().Replace(" ", "") == "Massoftraceamount(mg)")
                                 {
                                     int mergingstIdx = tbrc.GetCellIndex() + 1;
                                     int mergingedIdx = tbr.Cells.Count - 2;
@@ -860,6 +938,68 @@ namespace wordtoword
                 }
             }
         }
+
+
+        private bool HasParagraph(Section sec, string text, bool contains)
+        {
+
+            foreach (Table table in sec.Tables)
+            {
+                foreach (TableRow tbr in table.Rows)
+                {
+                    foreach (TableCell tbrc in tbr.Cells)
+                    {
+                        foreach (Paragraph pr in tbrc.Paragraphs)
+                        {
+                            if (contains == true)
+                            {
+                                if (pr.Text.Trim().Contains(text.Trim()))
+                                {
+                                    return true;
+                                }
+
+                            }
+                            else
+                            {
+                                if (pr.Text.Trim() == text.Trim())
+                                {
+                                    return true;
+                                }
+
+
+                            }
+
+
+                        }
+
+                    }
+
+                }
+            }
+
+            foreach (Paragraph pr in sec.Paragraphs)
+            {
+
+
+                if (pr.Text.Trim() == text.Trim())
+                {
+                    return true;
+                }
+
+
+            }
+
+
+            return false;
+
+
+        }
+
+        
+
+
+
+
 
         private void removeBlankP(Document document)
         {
@@ -2097,7 +2237,7 @@ namespace wordtoword
                     //load a document
                     document.LoadFromFile(rptname);
 
-                    //이미 한 번 정렬된 파일을 다시 정렬시키기 않기 위해서. 푸터 이미지 이미 있으면 정렬 안시킴
+                    //이미 한 번 정렬된 파일을 다시 정렬시키기 않기 위해서 푸터 이미지 이미 있으면 정렬 안시킴
                     bool hasfooter = false;
                     if (document.Sections[0].HeadersFooters.Header.Tables.Count > 0)
                     {
@@ -2106,9 +2246,14 @@ namespace wordtoword
 
                     if (hasfooter == false)
                     {
+
                         FooterForASTM_CHECMICAL(document);
                         removeBlankP(document);
                         insertHeader(document);
+
+
+
+
                         BodyForASTM_CHECMICAL(document);
 
                         //saveDocument
