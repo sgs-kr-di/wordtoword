@@ -2109,58 +2109,69 @@ namespace wordtoword
         }
         private void Form1_Load(object sender, EventArgs e)
         {
-            string folderPath_Integr_astm = @"C:\Projects\Projects\Sgs\Remote_One\ReportIntegration\ReportIntegration\Bom\ASTM_Integr";
-            string folderPath_Integr_en = @"C:\Projects\Projects\Sgs\Remote_One\ReportIntegration\ReportIntegration\Bom\EN_Integr";
-            string folderPath_Physical_astm = @"C:\Projects\Projects\Sgs\Remote_One\ReportIntegration\ReportIntegration\Bom\ASTM_Physical";
-            string folderPath_Physical_en = @"C:\Projects\Projects\Sgs\Remote_One\ReportIntegration\ReportIntegration\Bom\EN_Physical";
-            string folderPath_Chemical_en = @"C:\Projects\Projects\Sgs\Remote_One\ReportIntegration\ReportIntegration\Bom\EN_Chemical";
-            string folderPath_Chemical_astm = @"C:\Projects\Projects\Sgs\Remote_One\ReportIntegration\ReportIntegration\Bom\ASTM_Chemical";
-
-            DirectoryInfo Path_Integr_Astm = new DirectoryInfo(folderPath_Integr_astm);
-            DirectoryInfo Path_Integr_En = new DirectoryInfo(folderPath_Integr_en);
-            DirectoryInfo Path_Physical_Astm = new DirectoryInfo(folderPath_Physical_astm);
-            DirectoryInfo Path_Physical_En = new DirectoryInfo(folderPath_Physical_en);
-            DirectoryInfo Path_Chemical_En = new DirectoryInfo(folderPath_Chemical_en);
-            DirectoryInfo Path_Chemical_Astm = new DirectoryInfo(folderPath_Chemical_astm);
-
-            if (Path_Integr_Astm.Exists == false)
+            try 
             {
-                Path_Integr_Astm.Create();
-            }
+                string folderPath_Integr_astm = @"C:\Projects\Projects\Sgs\Remote_One\ReportIntegration\ReportIntegration\Bom\ASTM_Integr";
+                string folderPath_Integr_en = @"C:\Projects\Projects\Sgs\Remote_One\ReportIntegration\ReportIntegration\Bom\EN_Integr";
+                string folderPath_Physical_astm = @"C:\Projects\Projects\Sgs\Remote_One\ReportIntegration\ReportIntegration\Bom\ASTM_Physical";
+                string folderPath_Physical_en = @"C:\Projects\Projects\Sgs\Remote_One\ReportIntegration\ReportIntegration\Bom\EN_Physical";
+                string folderPath_Chemical_en = @"C:\Projects\Projects\Sgs\Remote_One\ReportIntegration\ReportIntegration\Bom\EN_Chemical";
+                string folderPath_Chemical_astm = @"C:\Projects\Projects\Sgs\Remote_One\ReportIntegration\ReportIntegration\Bom\ASTM_Chemical";
 
-            if (Path_Integr_En.Exists == false)
+                DirectoryInfo Path_Integr_Astm = new DirectoryInfo(folderPath_Integr_astm);
+                DirectoryInfo Path_Integr_En = new DirectoryInfo(folderPath_Integr_en);
+                DirectoryInfo Path_Physical_Astm = new DirectoryInfo(folderPath_Physical_astm);
+                DirectoryInfo Path_Physical_En = new DirectoryInfo(folderPath_Physical_en);
+                DirectoryInfo Path_Chemical_En = new DirectoryInfo(folderPath_Chemical_en);
+                DirectoryInfo Path_Chemical_Astm = new DirectoryInfo(folderPath_Chemical_astm);
+
+                if (Path_Integr_Astm.Exists == false)
+                {
+                    Path_Integr_Astm.Create();
+                }
+
+                if (Path_Integr_En.Exists == false)
+                {
+                    Path_Integr_En.Create();
+                }
+
+                if (Path_Physical_Astm.Exists == false)
+                {
+                    Path_Physical_Astm.Create();
+                }
+
+                if (Path_Physical_En.Exists == false)
+                {
+                    Path_Physical_En.Create();
+                }
+
+                if (Path_Chemical_En.Exists == false)
+                {
+                    Path_Chemical_En.Create();
+                }
+
+                if (Path_Chemical_Astm.Exists == false)
+                {
+                    Path_Chemical_Astm.Create();
+                }
+
+                button2_Click(sender, e);
+                button3_Click(sender, e);
+                button4_Click(sender, e);
+                button5_Click(sender, e);
+                button6_Click(sender, e);
+                button7_Click(sender, e);
+                AutoClosingMessageBox.Show("ASTM, EN 변환 완료!", "알림", 1000);
+                Application.Exit();
+            }
+            catch (Exception f)
             {
-                Path_Integr_En.Create();
+                MessageBox.Show("WordToWord 작업을 완료하지 못하였습니다.\r\n메세지를 캡쳐하여 관리자에게 전달 부탁드립니다.\r\n\r\n" +
+                    f.Source.ToString() + "\r\n\r\n" +
+                    f.Message.ToString() + "\r\n\r\n" +
+                    f.ToString());
+                Application.Exit();
             }
-
-            if (Path_Physical_Astm.Exists == false)
-            {
-                Path_Physical_Astm.Create();
-            }
-
-            if (Path_Physical_En.Exists == false)
-            {
-                Path_Physical_En.Create();
-            }
-
-            if (Path_Chemical_En.Exists == false)
-            {
-                Path_Chemical_En.Create();
-            }
-
-            if (Path_Chemical_Astm.Exists == false)
-            {
-                Path_Chemical_Astm.Create();
-            }
-
-            button2_Click(sender, e);
-            button3_Click(sender, e);
-            button4_Click(sender, e);
-            button5_Click(sender, e);
-            button6_Click(sender, e);
-            button7_Click(sender, e);
-            AutoClosingMessageBox.Show("ASTM, EN 변환 완료!", "알림", 1000);
-            Application.Exit();
         }
 
         private void button6_Click(object sender, EventArgs e)
