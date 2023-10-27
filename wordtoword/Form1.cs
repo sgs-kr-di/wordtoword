@@ -1299,6 +1299,8 @@ namespace wordtoword
             ListStyle listStyle = new ListStyle(document, ListType.Numbered);
             listStyle.Name = "levelstyle1";
             listStyle.Levels[0].CharacterFormat.FontName = "Arial";
+            listStyle.Levels[0].ParagraphFormat.HorizontalAlignment = HorizontalAlignment.Left;
+
             listStyle.Levels[0].CharacterFormat.FontSize = 9f;
             listStyle.Levels[0].PatternType = ListPatternType.Arabic;
             document.ListStyles.Add(listStyle);
@@ -1344,15 +1346,25 @@ namespace wordtoword
                             if (prObj is TextRange)
                             {
                                 TextRange textRange = prObj as TextRange;
-                                if (Regex.IsMatch(textRange.Text.Replace(" ", ""), @"([0-9]\.)\w+") == true && newpr.Text.Trim() != "")
+                                if (Regex.IsMatch(textRange.Text.Replace(" ", ""), @"([0-9]\.)\w+") == true)
                                 {
                                     int idx = textRange.Text.IndexOf('.');
                                     textRange.Text = textRange.Text.Substring(idx + 1);
-                                    prs2.Add(newpr);
+                                    if (newpr.Text != "")
+                                    {
+                                        prs2.Add(newpr);
+
+                                    }
+
                                     newpr = new Paragraph(document);
                                 }
+
+
                                 textRange.Text = textRange.Text.Trim();
                                 newpr.ChildObjects.Add(textRange.Clone());
+
+
+
                             }
 
 
@@ -1368,6 +1380,7 @@ namespace wordtoword
                     pr.Format.HorizontalAlignment = HorizontalAlignment.Justify;
                     pr.AppendBreak(BreakType.LineBreak);
                 }
+
 
 
                 Body body2 = noteTb.OwnerTextBody;
@@ -1704,8 +1717,8 @@ namespace wordtoword
                             DetailsOnSeeResult2forPhEN(document, indexForSR2);  //See Result 2 
                         }
                         //saveDocument
-                         document.SaveToFile(filepath, FileFormat.Docx);
-                        //document.SaveToFile(@"C:\Users\chaeeun_kim\OneDrive - SGS\문서\work2\휘진대리님테스트\WORDTOWORD\output.docx", FileFormat.Docx);
+                        document.SaveToFile(filepath, FileFormat.Docx);
+                        // document.SaveToFile(@"C:\Users\chaeeun_kim\OneDrive - SGS\문서\work2\휘진대리님테스트\WORDTOWORD\output.docx", FileFormat.Docx);
                     }
 
 
@@ -2156,11 +2169,12 @@ namespace wordtoword
                 }
 
                 button2_Click(sender, e);
-                button3_Click(sender, e);
+                //button3_Click(sender, e);
                 button4_Click(sender, e);
                 button5_Click(sender, e);
                 button6_Click(sender, e);
                 button7_Click(sender, e);
+                button8_Click(sender, e);
                 AutoClosingMessageBox.Show("ASTM, EN 변환 완료!", "알림", 1000);
                 Application.Exit();
             }
@@ -2276,5 +2290,140 @@ namespace wordtoword
             else
             { MessageBox.Show("폴더를 선택하세요"); }
         }
+
+        //EN COMBINE
+        private void button8_Click(object sender, EventArgs e)
+        {
+            using (var fbd = new FolderBrowserDialog())
+            {
+                fbd.SelectedPath = @"C:\Projects\Projects\Sgs\Remote_One\ReportIntegration\ReportIntegration\Bom\EN_Integr";
+
+                if (!string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                {
+                    filepaths = Directory.GetFiles(fbd.SelectedPath);
+                }
+            }
+
+            if (filepaths != null)
+            {
+                foreach (string filepath in filepaths)
+                {
+
+                    //get template
+                    string rptname = filepath;
+                    //Create word document
+                    Document document = new Document();
+                    //load a document
+                    document.LoadFromFile(rptname);
+
+
+                    //이미 한 번 정렬된 파일을 다시 정렬시키기 않기 위해서. 푸터 이미지 이미 있으면 정렬 안시킴!
+
+                    bool hasfooter = false;
+                    if (document.Sections[0].HeadersFooters.Header.Tables.Count > 0)
+                    {
+                        hasfooter = true;
+                    }
+
+
+                    if (hasfooter == false)
+                    {
+                        ; insertImOnfoote_renew(document);
+                        removeBlankP(document);
+
+                        //Details and styles
+                        Table table = (Table)document.Sections[0].Tables[1];
+                        table.Rows[3].Height = 20;
+                        table.Rows[3].Cells[1].CellFormat.VerticalAlignment = VerticalAlignment.Bottom;
+
+                        foreach (Section sec in document.Sections)
+                        {
+                            Table tb = (Table)sec.Tables[1];
+                            TextRange range = (tb.Rows[1].Cells[2].ChildObjects[0] as Paragraph).ChildObjects[0] as TextRange;
+                            range.CharacterFormat.FontSize = 9;
+                            TextRange range2 = (tb.Rows[1].Cells[4].ChildObjects[0] as Paragraph).ChildObjects[0] as TextRange;
+                            range2.CharacterFormat.FontSize = 9;
+                        }
+
+                        Table ResultSummaryTd = GetTableByFirstCell(document, "Test Requested");
+                        foreach (TableRow tbr in ResultSummaryTd.Rows)
+                        {
+                            foreach (TableCell tbrc in tbr.Cells)
+                            {
+                                if (tbrc.CellFormat.Borders.Bottom.BorderType == BorderStyle.None)
+                                {
+                                    tbrc.CellFormat.Borders.Bottom.BorderType = BorderStyle.Dot;
+                                }
+
+
+
+                            }
+
+                        }
+
+
+
+
+                        merge_cells_ENCOMBINE(document);
+                        removeBorder(document, 2);
+                        insertHeader(document);
+
+
+
+
+                        //saveDocument
+                        document.SaveToFile(filepath, FileFormat.Docx);
+                    }
+
+
+
+                }
+
+            }
+            else
+            { MessageBox.Show("폴더를 선택하세요"); }
+
+        }
+
+
+        private void merge_cells_ENCOMBINE(Document document)
+        {
+
+            foreach (Section sec in document.Sections)
+            {
+                foreach (Table tb in sec.Tables)
+                {
+                    for (int i = 0; i < tb.Rows.Count; i++)
+                    {
+                        for (int j = 0; j < tb.Rows[i].Cells.Count; j++)
+                        {
+                            foreach (Paragraph pg in tb.Rows[i].Cells[j].Paragraphs)
+                            {
+                                if (pg.Text.Contains("Category III : Scrapped-off toy material"))
+                                {
+                                    MergeCell(sec.Tables[5] as Table, false, 6, 0, 1);
+                                    MergeCell(sec.Tables[5] as Table, false, 7, 0, 1);
+                                    MergeCell(sec.Tables[5] as Table, false, 0, 0, 1);
+                                    MergeCell(sec.Tables[5] as Table, true, 0, 1, 5);
+
+                                    //sec.Tables[5].ApplyVerticalMerge(6, 0, 1);
+                                    //sec.Tables[5].ApplyVerticalMerge(7, 0, 1);
+                                    //sec.Tables[5].ApplyVerticalMerge(0, 0, 1);
+                                    //sec.Tables[5].ApplyHorizontalMerge(0, 1, 5);
+
+                                }
+
+
+                            }
+                        }
+
+
+                    }
+
+                }
+            }
+
+        }
+
     }
-}
+    }
