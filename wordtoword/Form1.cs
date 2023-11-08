@@ -1,4 +1,12 @@
-﻿using System;
+﻿using BorderStyle = Spire.Doc.Documents.BorderStyle;
+using FileFormat = Spire.Doc.FileFormat;
+using HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment;
+using Ookii.Dialogs.WinForms;
+using Ookii;
+using Spire.Doc.Documents;
+using Spire.Doc.Fields;
+using Spire.Doc;
+using Spire.Pdf;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -6,19 +14,11 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Spire.Doc;
-using Spire.Doc.Documents;
-using Spire.Doc.Fields;
-using Ookii;
-using BorderStyle = Spire.Doc.Documents.BorderStyle;
-using HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment;
-using Ookii.Dialogs.WinForms;
-using Spire.Pdf;
-using FileFormat = Spire.Doc.FileFormat;
-using System.Text.RegularExpressions;
+using System;
 
 namespace wordtoword
 {
@@ -419,7 +419,10 @@ namespace wordtoword
                 for (int j = 0; j < paragraph.ChildObjects.OfType<TextRange>().Count(); j++)
                 {
                     TextRange textrange = paragraph.ChildObjects[j] as TextRange;
-                    txt = txt + textrange.Text;
+                    if (textrange != null)
+                    {
+                        txt = txt + textrange.Text;
+                    }
                 }
             }
             return txt;
@@ -463,9 +466,10 @@ namespace wordtoword
             }
         }
 
+
+
         private Table GetSampleDesc(Section sec)
         {
-
 
 
             foreach (Table tb in sec.Tables)
@@ -479,7 +483,6 @@ namespace wordtoword
                     }
 
 
-
                 }
 
 
@@ -489,6 +492,12 @@ namespace wordtoword
             return null;
 
         }
+
+
+
+
+
+
 
         private void ConvertToParagraph(TableCell tbc, bool afterTB = false)
         {
@@ -995,7 +1004,7 @@ namespace wordtoword
 
         }
 
-        
+
 
 
 
@@ -2122,7 +2131,7 @@ namespace wordtoword
         }
         private void Form1_Load(object sender, EventArgs e)
         {
-            try 
+            try
             {
                 string folderPath_Integr_astm = @"C:\Projects\Projects\Sgs\Remote_One\ReportIntegration\ReportIntegration\Bom\ASTM_Integr";
                 string folderPath_Integr_en = @"C:\Projects\Projects\Sgs\Remote_One\ReportIntegration\ReportIntegration\Bom\EN_Integr";
@@ -2297,6 +2306,7 @@ namespace wordtoword
             using (var fbd = new FolderBrowserDialog())
             {
                 fbd.SelectedPath = @"C:\Projects\Projects\Sgs\Remote_One\ReportIntegration\ReportIntegration\Bom\EN_Integr";
+                //fbd.SelectedPath = @"C:\Users\chaeeun_kim\Documents\work-support\휘진대리님-wordtoword\en combine";
 
                 if (!string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
@@ -2328,7 +2338,7 @@ namespace wordtoword
 
                     if (hasfooter == false)
                     {
-                        ; insertImOnfoote_renew(document);
+                        insertImOnfoote_renew(document);
                         removeBlankP(document);
 
                         //Details and styles
@@ -2361,12 +2371,25 @@ namespace wordtoword
 
                         }
 
+                        //TIN
+                        foreach (Section sec in document.Sections)
+                        {
+                            int tinTbIdx = IsTin(sec); //이게 TEST RESULT 테이블이 있는 섹션인지 확인
 
+                            if (tinTbIdx != -1)
+                            {
+                                Table tbOnResult = sec.Tables[tinTbIdx] as Table;
+                                tbOnResult.ApplyVerticalMerge(0, 0, 1);//Test Item
+                                tbOnResult.ApplyVerticalMerge(2, 0, 1); //Soluble Organic Tin Result(s) (mg / kg)
+
+                            }
+                        }
 
 
                         merge_cells_ENCOMBINE(document);
                         removeBorder(document, 2);
                         insertHeader(document);
+
 
 
 
@@ -2388,23 +2411,25 @@ namespace wordtoword
 
         private void merge_cells_ENCOMBINE(Document document)
         {
-
             foreach (Section sec in document.Sections)
             {
-                foreach (Table tb in sec.Tables)
+                for (int o = 0; o < sec.Tables.Count; o++)
                 {
+                    Table tb = sec.Tables[o] as Table;
                     for (int i = 0; i < tb.Rows.Count; i++)
                     {
                         for (int j = 0; j < tb.Rows[i].Cells.Count; j++)
                         {
                             foreach (Paragraph pg in tb.Rows[i].Cells[j].Paragraphs)
                             {
-                                if (pg.Text.Contains("Category III : Scrapped-off toy material"))
+                                if (pg.Text.Replace(" ", "").Contains("CategoryIII:Scrapped-offtoymaterial"))
                                 {
-                                    MergeCell(sec.Tables[5] as Table, false, 6, 0, 1);
-                                    MergeCell(sec.Tables[5] as Table, false, 7, 0, 1);
-                                    MergeCell(sec.Tables[5] as Table, false, 0, 0, 1);
-                                    MergeCell(sec.Tables[5] as Table, true, 0, 1, 5);
+                                    Table resulttb = sec.Tables[o + 2] as Table;
+                                    int cellCount = resulttb.Rows[0].Cells.Count;
+                                    MergeCell(sec.Tables[o + 2] as Table, false, cellCount - 1, 0, 1);
+                                    MergeCell(sec.Tables[o + 2] as Table, false, cellCount - 2, 0, 1);
+                                    MergeCell(sec.Tables[o + 2] as Table, false, 0, 0, 1);
+                                    MergeCell(sec.Tables[o + 2] as Table, true, 0, 1, cellCount - 3);
 
                                     //sec.Tables[5].ApplyVerticalMerge(6, 0, 1);
                                     //sec.Tables[5].ApplyVerticalMerge(7, 0, 1);
@@ -2426,4 +2451,4 @@ namespace wordtoword
         }
 
     }
-    }
+}
