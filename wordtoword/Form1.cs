@@ -1,12 +1,4 @@
-﻿using BorderStyle = Spire.Doc.Documents.BorderStyle;
-using FileFormat = Spire.Doc.FileFormat;
-using HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment;
-using Ookii.Dialogs.WinForms;
-using Ookii;
-using Spire.Doc.Documents;
-using Spire.Doc.Fields;
-using Spire.Doc;
-using Spire.Pdf;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -14,11 +6,19 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System;
+using Spire.Doc;
+using Spire.Doc.Documents;
+using Spire.Doc.Fields;
+using Ookii;
+using BorderStyle = Spire.Doc.Documents.BorderStyle;
+using HorizontalAlignment = Spire.Doc.Documents.HorizontalAlignment;
+using Ookii.Dialogs.WinForms;
+using Spire.Pdf;
+using FileFormat = Spire.Doc.FileFormat;
+using System.Text.RegularExpressions;
 
 namespace wordtoword
 {
@@ -124,9 +124,9 @@ namespace wordtoword
                         {
                             Table tb = (Table)sec.Tables[1];
                             TextRange range = (tb.Rows[1].Cells[2].ChildObjects[0] as Paragraph).ChildObjects[0] as TextRange;
-                            range.CharacterFormat.FontSize = 9;
+                            range.CharacterFormat.FontSize = 10;
                             TextRange range2 = (tb.Rows[1].Cells[4].ChildObjects[0] as Paragraph).ChildObjects[0] as TextRange;
-                            range2.CharacterFormat.FontSize = 9;
+                            range2.CharacterFormat.FontSize = 10;
                         }
 
 
@@ -356,6 +356,34 @@ namespace wordtoword
 
 
             return null;
+
+        }
+
+        private int GetNotesIdx(Section sec)
+        {
+
+
+
+            for (int i = 0; i < sec.Tables.Count; i++)
+            {
+                Table tb = sec.Tables[i] as Table;
+                foreach (Paragraph pr in tb.Rows[0].Cells[0].Paragraphs)
+                {
+                    if (pr.Text.Trim().StartsWith("Note :"))
+                    {
+                        return i;
+
+                    }
+
+
+
+                }
+
+
+            }
+
+
+            return -1;
 
         }
 
@@ -1643,9 +1671,9 @@ namespace wordtoword
                         {
                             Table tb = (Table)sec.Tables[1];
                             TextRange range = (tb.Rows[1].Cells[2].ChildObjects[0] as Paragraph).ChildObjects[0] as TextRange;
-                            range.CharacterFormat.FontSize = 9;
+                            range.CharacterFormat.FontSize = 10;
                             TextRange range2 = (tb.Rows[1].Cells[4].ChildObjects[0] as Paragraph).ChildObjects[0] as TextRange;
-                            range2.CharacterFormat.FontSize = 9;
+                            range2.CharacterFormat.FontSize = 10;
                         }
 
 
@@ -1816,11 +1844,9 @@ namespace wordtoword
             string previousClause = "";
             if (tb != null)
             {
-
                 foreach (TableRow tbr in tb.Rows)
                 {
                     tbr.Height = 15.59055F;
-
                 }
 
                 for (int i = 1; i < tb.Rows.Count - 1; i++)
@@ -1833,7 +1859,8 @@ namespace wordtoword
                         previousClause = pr.Text.Trim().Split('.').First();
                     }
 
-                    if (previousClause != pr.Text.Trim().Split('.').First() && previousClause != "" && pr.Text.Trim().Split('.').First() != "")
+                    //if (previousClause != pr.Text.Trim().Split('.').First() && previousClause != "" && pr.Text.Trim().Split('.').First() != "")
+                    if (previousClause != pr.Text.Trim().Split('.').First())
                     {
 
                         SetTableBorderByTableRow(tr, BorderStyle.Single, 1);
@@ -1866,7 +1893,6 @@ namespace wordtoword
 
             foreach (TableCell tbrCell in tbr.Cells)
             {
-
                 if (where == 0) //BOTTOM
                 {
                     tbrCell.CellFormat.Borders.Bottom.BorderType = borderStyle;
@@ -2108,9 +2134,9 @@ namespace wordtoword
                         {
                             Table tb = (Table)sec.Tables[1];
                             TextRange range = (tb.Rows[1].Cells[2].ChildObjects[0] as Paragraph).ChildObjects[0] as TextRange;
-                            range.CharacterFormat.FontSize = 9;
+                            range.CharacterFormat.FontSize = 10;
                             TextRange range2 = (tb.Rows[1].Cells[4].ChildObjects[0] as Paragraph).ChildObjects[0] as TextRange;
-                            range2.CharacterFormat.FontSize = 9;
+                            range2.CharacterFormat.FontSize = 10;
                         }
 
                         DetailsOnResultSummaryForPhASTM(document); //result summary p3
@@ -2326,18 +2352,16 @@ namespace wordtoword
                     //load a document
                     document.LoadFromFile(rptname);
 
-
                     //이미 한 번 정렬된 파일을 다시 정렬시키기 않기 위해서. 푸터 이미지 이미 있으면 정렬 안시킴!
-
                     bool hasfooter = false;
                     if (document.Sections[0].HeadersFooters.Header.Tables.Count > 0)
                     {
                         hasfooter = true;
                     }
 
-
                     if (hasfooter == false)
                     {
+
                         insertImOnfoote_renew(document);
                         removeBlankP(document);
 
@@ -2346,14 +2370,91 @@ namespace wordtoword
                         table.Rows[3].Height = 20;
                         table.Rows[3].Cells[1].CellFormat.VerticalAlignment = VerticalAlignment.Bottom;
 
-                        foreach (Section sec in document.Sections)
+                        for (int s = 0; s < document.Sections.Count; s++)
                         {
+                            Section sec = document.Sections[s];
                             Table tb = (Table)sec.Tables[1];
                             TextRange range = (tb.Rows[1].Cells[2].ChildObjects[0] as Paragraph).ChildObjects[0] as TextRange;
-                            range.CharacterFormat.FontSize = 9;
+                            range.CharacterFormat.FontSize = 10; //
                             TextRange range2 = (tb.Rows[1].Cells[4].ChildObjects[0] as Paragraph).ChildObjects[0] as TextRange;
-                            range2.CharacterFormat.FontSize = 9;
+                            range2.CharacterFormat.FontSize = 10; //
+
+
+
+                            //notes 부분
+                            List<Paragraph> prs2 = new List<Paragraph>();
+                            int noteIdx = GetNotesIdx(sec);
+                            if (noteIdx != -1)
+                            {
+
+                                ListStyle listStyle = new ListStyle(document, ListType.Numbered);
+                                listStyle.Name = "levelstyle" + s.ToString();
+                                listStyle.Levels[0].CharacterFormat.FontName = "Arial";
+                                listStyle.Levels[0].CharacterFormat.FontSize = 10;
+                                listStyle.Levels[0].PatternType = ListPatternType.Arabic;
+                                document.ListStyles.Add(listStyle);
+
+                                Table noteTb = sec.Tables[noteIdx + 1] as Table;
+                                List<string> notes = noteTb.Rows[0].Cells[0].Paragraphs[0].Text.Split(new[] { "" }, StringSplitOptions.None).ToList();
+                                foreach (string note in notes)
+                                {
+                                    Paragraph newpr = new Paragraph(document);
+                                    TextRange tr = newpr.AppendText(note.Trim());
+
+                                    if (Regex.IsMatch(tr.Text.Replace(" ", ""), @"([0-9]\.)\w+") == true && tr.Text.Trim() != "")
+                                    {
+                                        int idx = tr.Text.IndexOf('.');
+                                        tr.Text = tr.Text.Substring(idx + 1).Trim();
+                                        tr.CharacterFormat.FontName = "Arial";
+                                        tr.CharacterFormat.FontSize = 10;
+
+                                        newpr.Format.LineSpacingRule = LineSpacingRule.Exactly;
+                                        newpr.Format.LineSpacing = 20f;
+
+
+                                        newpr.ListFormat.ApplyStyle("levelstyle" + s.ToString());
+                                        newpr.Format.HorizontalAlignment = HorizontalAlignment.Left;
+                                        prs2.Add(newpr);
+
+                                    }
+
+                                }
+
+                                //원래있던 파라그래프 지우고 새로 넣기.
+                                noteTb.Rows[0].Cells[0].ChildObjects.Clear();
+                                foreach (Paragraph pr in prs2)
+                                {
+                                    noteTb.Rows[0].Cells[0].ChildObjects.Add(pr);
+
+
+
+                                }
+
+
+
+                            }
+
+
+                            //TIN
+
+                            int tinTbIdx = IsTin(sec); //이게 TEST RESULT 테이블이 있는 섹션인지 확인
+
+                            if (tinTbIdx != -1)
+                            {
+                                Table tbOnResult = sec.Tables[tinTbIdx] as Table;
+                                MergeCell(tbOnResult, false, 0, 0, 1);//test items
+                                int numberofcol = tbOnResult.Rows[0].Cells.Count;
+                                MergeCell(tbOnResult, false, numberofcol - 1, 0, 1);//Reporting Limit (mg/kg)
+                                MergeCell(tbOnResult, true, 0, 1, numberofcol - 2); //Soluble Organic Tin Result(s) (mg / kg)
+
+                                tbOnResult.Rows[0].Cells[1].SetCellWidth(48, CellWidthType.Percentage);
+                                tbOnResult.Rows[0].Height = 4;
+                                tbOnResult.Rows[0].HeightType = TableRowHeightType.AtLeast;
+
+
+                            }
                         }
+
 
                         Table ResultSummaryTd = GetTableByFirstCell(document, "Test Requested");
                         foreach (TableRow tbr in ResultSummaryTd.Rows)
@@ -2366,33 +2467,16 @@ namespace wordtoword
                                 }
 
 
-
                             }
 
                         }
 
-                        //TIN
-                        foreach (Section sec in document.Sections)
-                        {
-                            int tinTbIdx = IsTin(sec); //이게 TEST RESULT 테이블이 있는 섹션인지 확인
 
-                            if (tinTbIdx != -1)
-                            {
-                                Table tbOnResult = sec.Tables[tinTbIdx] as Table;
-                                tbOnResult.ApplyVerticalMerge(0, 0, 1);//Test Item
-                                tbOnResult.ApplyVerticalMerge(2, 0, 1); //Soluble Organic Tin Result(s) (mg / kg)
-
-                            }
-                        }
 
 
                         merge_cells_ENCOMBINE(document);
                         removeBorder(document, 2);
                         insertHeader(document);
-
-
-
-
 
                         //saveDocument
                         document.SaveToFile(filepath, FileFormat.Docx);
